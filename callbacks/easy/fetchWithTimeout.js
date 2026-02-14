@@ -10,7 +10,19 @@
 
 
 function fetchWithTimeout(url, ms, callback) {
+  const timeoutId = setTimeout(() => {
+    callback(new Error("Request Timed Out"));
+  }, ms);
 
+  fetch(url, (err, data) => {
+    clearTimeout(timeoutId);
+
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, data);
+    }
+  });
 }
 
 module.exports = fetchWithTimeout;
